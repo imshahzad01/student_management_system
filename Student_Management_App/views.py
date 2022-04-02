@@ -19,6 +19,7 @@ def loginPage(request):
 def login(request):
     if request.method == "POST":
         user = EmailBackEnd.authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
+        print(user)
         if user != None:
             login(request, user)
             user_type = user.user_type

@@ -44,16 +44,17 @@ def add_teacher_save(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         address = request.POST.get('address')
+        print(address)
 
         try:
             user = CustomUser.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name, user_type=2)
-            user.staffs.address = address
+            user.teachers.address = address
             user.save()
             messages.success(request, "Successfully Saved!")
             return redirect('add_staff')
         except:
-            messages.error(request, "Failed to Add Staff!")
-            return redirect('add_teachers')
+            messages.error(request, "Failed to Add Teachers!")
+            return redirect('admin_home')
 
 
 
@@ -72,7 +73,7 @@ def edit_teacher(request, teacher_id):
         "teacher": teacher,
         "id": teacher_id
     }
-    return render(request, "Admin_template/edit_staff_template.html", context)
+    return render(request, "Admin_template/edit_teachers.html", context)
 
 
 def edit_teacher_save(request):
@@ -85,22 +86,32 @@ def edit_teacher_save(request):
         address = request.POST.get('address')
 
         try:
-            user = User.objects.get(id=teacher_id)
+            user = CustomUser.objects.get(id=teacher_id)
             user.first_name = first_name
             user.last_name = last_name
             user.email = email
             user.username = username
             user.save()
             
-            staff_model = Teachers.objects.get(admin=teacher_id)
-            staff_model.address = address
-            staff_model.save()
+            teacher = Teachers.objects.get(admin=teacher_id)
+            teacher.address = address
+            teacher.save()
 
             messages.success(request, "Successfully Updated.")
-            return redirect('/edit_staff/' + teacher_id)
+            return redirect('/edit_teacher/' + teacher_id)
 
         except:
             messages.error(request, "Failed to Update Staff.")
             return redirect('/edit_staff/' + teacher_id)
 
+
+def delete_teacher(request, teacher_id):
+    teacher = Teachers.objects.get(admin=teacher_id)
+    try:
+        teacher.delete()
+        messages.success(request, "Teacher Deleted Successfully.")
+        return redirect('manage_teacher')
+    except:
+        messages.error(request, "Failed to Delete Teacher.")
+        return redirect('manage_teacher')
 
