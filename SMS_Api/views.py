@@ -11,7 +11,7 @@ from django.http import Http404
 class StudentList(APIView):
 
     def get(self, reuqest, format=None):
-        student = Students.objects.select_related('class_id')
+        student = Students.objects.all()
         serialized = StudentsSerializer(student, many=True)
         return Response(serialized.data)
 
@@ -54,6 +54,13 @@ class SubjectsList(APIView):
 
 
 # Teacher DetailView, Update, Delete 
+"""
+The permission of these APIs will be managed via front-end. 
+Only the admin panel will show options of editing Teachers, Students, Classes, Subjects and their details. 
+The Teachers will have permission to list Their classes, subjects and students. 
+Alternate would be to add permission via back-end and pass the user_type in APIs. 
+If user_type =1 ( Admin ) allow ALL CRUD Operations else only allow Reading. """
+
 class TeacherDetail(APIView):
     def get_object(self, pk):
         try:
@@ -89,6 +96,7 @@ class TeacherDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+"""Same of above here"""
 # Subject DetailView Update, Delete
 class SubjectDetail(APIView):
     def get_object(self, pk):

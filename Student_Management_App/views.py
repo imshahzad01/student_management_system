@@ -21,16 +21,12 @@ def login(request):
         user = EmailBackEnd.authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
         print(user)
         if user != None:
-            login(request, user)
             user_type = user.user_type
             if user_type == '1':
                 return redirect('admin_home')
                 
             elif user_type == '2':
-                return redirect('admin_home')
-                
-            elif user_type == '3':
-                return redirect('admin_home')
+                return redirect('manage_teacher')
             else:
                 messages.error(request, "Something went wrong!")
                 return redirect('login')

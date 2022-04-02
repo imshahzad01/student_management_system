@@ -47,9 +47,13 @@ def add_teacher_save(request):
         print(address)
 
         try:
-            user = CustomUser.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name, user_type=2)
+            user = Teachers.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name)
             user.teachers.address = address
             user.save()
+            print(user)
+            # Making another enrty to customuser to allow teachers login
+            user1 = CustomUser.objects.create(user_type=2, username=username, password=password)
+            user1.save()
             messages.success(request, "Successfully Saved!")
             return redirect('add_staff')
         except:
