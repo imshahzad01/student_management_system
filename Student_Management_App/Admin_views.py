@@ -7,8 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
 
-from Student_Management_App.models import User, Teachers, Classes, Subjects, Students
-from .forms import AddStudentForm, EditStudentForm
+from Student_Management_App.models import CustomUser, Teachers, Classes, Subjects, Students
+# from .forms import AddStudentForm, EditStudentForm
 
 
 def admin_home(request):
@@ -33,7 +33,7 @@ def admin_home(request):
 
 
 def add_teacher(request):
-    return render(request, "Admin_template/add_staff_template.html")
+    return render(request, "Admin_template/add_teacher.html")
 
 
 def add_teacher_save(request):
@@ -46,10 +46,10 @@ def add_teacher_save(request):
         address = request.POST.get('address')
 
         try:
-            user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name, user_type=2)
+            user = CustomUser.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name, user_type=2)
             user.staffs.address = address
             user.save()
-            messages.success(request, "Added Successfully!")
+            messages.success(request, "Successfully Saved!")
             return redirect('add_staff')
         except:
             messages.error(request, "Failed to Add Staff!")
